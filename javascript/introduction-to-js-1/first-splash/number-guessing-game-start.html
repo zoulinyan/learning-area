@@ -41,10 +41,85 @@
 </div>
 
 </body>
+</html>
 
 <script>
 
   // Your JavaScript goes here
+  //添加变量以保存数据
+    var randomNumber =Math.floor(Math.random()*100)+1;
+    var guesses=document.querySelector('.guesses');
+    var lastResult =document.querySelector('.lastResult');
+    var lowOrHi=document.querySelector('.lowOrHi');
+    var guessFiled=document.querySelector('guessFiled');
+    var guessSubmit=document.querySelector('guessSubmit');
+    var guessCount=1;
+    var restButton;
+    guessFiled.focus();
 
+//条件函数
+//猜测值用一个变量存储；判断条件：一次成功+猜测成功+猜测不成功时（等于10次和不等于10次的结果并比较大小）
+//每次判断结束后计数+文本框值为空+光标显示
+//监听事件addEventListener.函数调用checkGuess。并且响应于事件触发而运行的代码块被称为事件处理器
+
+    function checkGuess() {
+        var userGuess=Number(guessFiled.value);
+        if( guessCount===1){
+            guesses.textContent='Previous guesses: ';
+        }
+        guesses.textContent+=userGuess+'';
+        if(userGuess===randomNumber){
+            lastResult.textContent='Congratulations! You got it right!';
+            lastResult.style.color='green';
+            lowOrHi.textContent='';
+            setGameOver();
+        }else if(guessCount===10){
+            lastResult.textContent='!!!GAME OVER!!!';
+            setGameOver();
+        }else {
+            lastResult.textContent='wrong';
+            lastResult.style.color='red';
+            if(userGuess<randomNumber){
+                lowOrHi.textContent='Last guess was too low!';
+            }else if(userGuess>randomNumber){
+                lowOrHi.textContent='Last guess was too high!';
+                }
+        }
+        guessCount++;
+        guessFiled.value='';
+        guessFiled.focus();
+    }
+    guessSubmit.addEventListener('click',checkGuess);
+
+
+//游戏结束函数
+//游戏结束时文本框和按钮属于不可编辑状态；添加一个重置按钮restButton，显示开始新游戏；给这个重置按钮加监听事件；
+
+    function setGameOver(){
+        guessFiled.disabled='true';
+        guessSubmit.disabled='true';
+        restButton=document.createElement('button');
+        restButton.textContent='Start new game';
+        document.body.appendChild(restButton);
+        restButton.addEventListener('click', resetGame);
+    }
+
+
+//重置游戏函数
+//将guessCount恢复为1；清除所有段落信息；删除重置按钮；启用文本框和提交按钮；消除结果处颜色；重新定义随机数
+
+    function resetGame() {
+        guessCount = 1;
+        var resetParas = document.querySelectorAll('.resultParas p');
+        for (var i = 0 ; i < resetParas.length ; i++) {
+            resetParas[i].textContent = '';
+        }
+        restButton.parentNode.removeChild(restButton);
+        guessFiled.disabled = false;
+        guessSubmit.disabled = false;
+        guessFiled.value = '';
+        guessFiled.focus();
+        lastResult.style.backgroundColor = 'white';
+        randomNumber = Math.floor(Math.random()*100) + 1;
+    }
 </script>
-</html>
